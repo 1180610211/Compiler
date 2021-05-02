@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="750.0" prefWidth="1000.0" style="-fx-background-color: #F0FFF0;"
+            xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controller.SyntaxController">
+    <children>
+        <Label alignment="CENTER" layoutY="30.0" text="语法分析结果" textAlignment="CENTER" AnchorPane.leftAnchor="0.0"
+               AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
+            <font>
+                <Font name="KaiTi" size="40.0"/>
+            </font>
+        </Label>
+        <Label layoutX="238.0" layoutY="99.0" text="语法分析树">
+            <font>
+                <Font name="KaiTi" size="25.0"/>
+            </font>
+        </Label>
+        <Label layoutX="750.0" layoutY="99.0" style="-fx-font-family: KaiTi; -fx-font-size: 25px;" text="错误信息">
+            <font>
+                <Font size="18.0"/>
+            </font>
+        </Label>
+        <TextArea fx:id="errorInfo" editable="false" layoutX="334.0" layoutY="130.0" prefHeight="620.0"
+                  prefWidth="400.0" style="-fx-font-family: consolas; -fx-font-size: 12pt; -fx-text-fill: red;"
+                  wrapText="true" AnchorPane.rightAnchor="0.0"/>
+        <TextArea fx:id="tree" editable="false" layoutX="84.0" layoutY="113.0" prefHeight="620.0" prefWidth="400.0"
+                  style="-fx-font-family: consolas; -fx-font-size: 12pt; -fx-text-fill: green;" wrapText="true"
+                  AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="400.0"/>
+
+    </children>
+</AnchorPane>
