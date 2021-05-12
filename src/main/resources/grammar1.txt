@@ -1,3 +1,0 @@
-S ::= B
-B ::= B || B | B && B | ! B | ( B ) | true | false
-relop ::= < | <= | == | != | > | >=

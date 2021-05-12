@@ -24,7 +24,7 @@ public class Token {
     public static ArrayList<String> OPERATIONS = new ArrayList<>(Arrays.asList(
             "+", "-", "*", "/", "%",
             ">", ">=", "<", "<=", "==", "!=",
-            "&&", "||", "!", "&", "|", "^", "~"
+            "&&", "||", "!", "&", "|", "^", "~","."
     ));
 
     // 静态代码块，填充TOKEN_STRING_2_NUMBER和TOKEN_NUMBER_2_STRING

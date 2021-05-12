@@ -12,6 +12,7 @@ import lexer.Token;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class SyntaxController implements Initializable {
@@ -26,7 +27,7 @@ public class SyntaxController implements Initializable {
         tree.setText(treeString);
     }
 
-    public void setErrorInfo(ArrayList<String> errorList) {
+    public void setErrorInfo(List<String> errorList) {
         StringBuilder sb = new StringBuilder();
         for (String e : errorList) {
             sb.append(e);

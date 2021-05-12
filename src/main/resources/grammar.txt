@@ -1,26 +1,30 @@
 S ::= Program
 Program ::= ExtDefList
 ExtDefList ::= ExtDefList ExtDef | ε
-ExtDef ::= Type VarDec ; | struct ID { DefList } ; | function Type FunDec CompSt | function Type FunDec ; 
+ExtDef ::= Def | struct ID { O DefList } ; | function Type FunDec { O P DefList StmtList } | function Type FunDec ; 
 
 BaseType ::= bool | char | int | float | double
 Type ::= BaseType | struct ID
 
 DefList ::= DefList Def | ε
-Def ::= Type VarDec ; | struct ID { DefList } ;
+Def ::= Type ID dims ; 
 
-VarDec ::= ID | VarDec [ INTNUM ]
+dims ::= ε | [ INTNUM ] dims
 FunDec ::= ID ( VarList ) | ID ( )
 VarList ::= VarList , ParamDec | ParamDec
-ParamDec ::= Type VarDec
+ParamDec ::= Type ID dims
 
-CompSt ::= { DefList StmtList }
-StmtList ::= StmtList Stmt | ε
+CompSt ::= { O DefList StmtList }
+StmtList ::= StmtList M Stmt | ε
 
-Stmt ::= Exp ; | ID = Exp ; | L = Exp ; | CompSt | if ( B ) Stmt | if ( B ) Stmt else Stmt | return Exp ; | while ( B ) Stmt | do Stmt while ( B ) ; 
+Stmt ::= Exp ; | ID = Exp ; | L = Exp ; | CompSt | if ( B ) M Stmt | if ( B ) M Stmt N else M Stmt | return Exp ; | while M ( B ) M Stmt | do M Stmt while ( M B ) ; 
 L ::= ID [ Exp ] | L [ Exp ]
-Exp ::= Exp + Exp | Exp - Exp | Exp * Exp | Exp / Exp | ( Exp ) | ID | L | INTNUM | REALNUM | STRING | call ID ( ) | call ID ( ParamList )
+Exp ::= Exp + Exp | Exp - Exp | Exp * Exp | Exp / Exp | ( Exp ) | ID | L | INTNUM | REALNUM | call ID ( ) | call ID ( ParamList )
 ParamList ::= ParamList , Exp | Exp
-B ::= B || B | B && B | ! B | ( B ) | Exp relop Exp | true | false
+B ::= B || M B | B && M B | ! B | ( B ) | Exp relop Exp | true | false
 relop ::= < | <= | == | != | > | >=
 
+M ::= ε
+N ::= ε
+O ::= ε 
+P ::= ε 

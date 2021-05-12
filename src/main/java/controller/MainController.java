@@ -24,6 +24,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
@@ -109,7 +110,7 @@ public class MainController implements Initializable {
     @FXML
     private void compile2() throws IOException {
         String treeString = parser.getTree();
-        ArrayList<String> errorList = parser.getErrorList();
+        List<String> errorList = parser.getErrorList();
 
         Stage stage = new Stage();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/syntax.fxml"));

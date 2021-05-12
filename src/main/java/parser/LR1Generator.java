@@ -344,6 +344,7 @@ public class LR1Generator {
         int AND = Token.TOKEN_STRING_2_NUMBER.get("&&");
         int OR = Token.TOKEN_STRING_2_NUMBER.get("||");
 
+        int N = NON_TERMINAL_STRING_2_NUMBER.get("N");
         int ELSE = Token.TOKEN_STRING_2_NUMBER.get("else");
 
         for (ItemSet itemSet : itemSets) {
@@ -364,10 +365,12 @@ public class LR1Generator {
                     String s = transition.get(DOLLAR);
                     transition.put(DOLLAR, "acc");
                 } else if (item.isReducible()) {
-                    if ((right.size() == 3 && compare(right.get(1), lookahead))
-                            || (right.size() == 2 && compare(right.get(0), lookahead))) {
+                    if (((right.size() == 3 || right.size() == 4) && compare(right.get(1), lookahead))
+                            || (right.size() == 2 && compare(right.get(0), lookahead))
+                            || (item.getLeft() == N)) {
                         transition.put(item.getLookAhead(), "r" + item.getIndex());
                         shiftable = false;
+                        reducible = false;
                     } else {
                         String s = transition.get(item.getLookAhead());
                         if (s == null) {
@@ -378,8 +381,8 @@ public class LR1Generator {
                         }
                     }
                 } else if (Token.TERMINAL_INTEGER.contains(dotSymbol)) {
-                    if ((right.size() == 3 && (dotSymbol == TIMES || dotSymbol == DIV || dotSymbol == AND))
-                            || (right.size() == 7 && dotSymbol == ELSE)) {
+                    if (((right.size() == 3 || right.size() == 4) && (dotSymbol == TIMES || dotSymbol == DIV || dotSymbol == AND))
+                            || (right.size() == 10 && dotSymbol == N)) {
                         transition.put(dotSymbol, "s" + gotoTable.get(dotSymbol));
                         reducible = false;
                     } else {
@@ -496,8 +499,8 @@ public class LR1Generator {
             System.out.println(itemSet);
         }
         System.out.println("size:" + itemSets.size());
-//        lr1Generator.generateLR1Table(itemSets);
-//        lr1Generator.printLR1Table(size, "src/main/resources/LR1Table.txt");
+        lr1Generator.generateLR1Table(itemSets);
+        lr1Generator.printLR1Table(size, "src/main/resources/LR1Table.txt");
 
 //        for (int x : firstMap.keySet()) {
 ////            System.out.println(NON_TERMINAL_NUMBER_2_STRING.get(x) + ":" + isNullable(x));
