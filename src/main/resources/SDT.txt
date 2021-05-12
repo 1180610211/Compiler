@@ -1,0 +1,201 @@
+S ::= Program
+
+Program ::= {{symbolTable=new SymbolTable(); 
+			symbolTableStack.push(symbolTable);
+			offset=0;}} 
+			ExtDefList
+
+ExtDefList ::= ExtDefList ExtDef 
+ExtDefList ::= ''
+
+ExtDef ::= Def ;
+
+// 扩展符号表项
+ExtDef ::= struct ID { 
+		   O 
+		   DefList } ;
+		   {{ width=offset;
+		   symbolTableStack.top().enter(new StructSymbol(ID.lexeme,"struct",width,symbolTable));
+		   symbolTable=symbolTableStack.pop();
+		   offset=offsetStack.pop()+width; }}
+
+ExtDef ::= function Type FunDec 
+		   { O P DefList StmtList }
+		   {{
+			width=offset;
+			funcSymbol=lookUp(FunDec.lexeme);
+			funcSymbol.setWidth(offset);
+			funcSymbol.setSymbolTable(symbolTable);
+			symbolTable=symbolTableStack.pop();
+			offset=offsetStack.pop();
+		   }}
+
+ExtDef ::= function Type FunDec ;    
+{{symbolTable.enter(new FuncSymbol(FunDec.lexeme,"function",0,Type.type,FunDec.list,null));}}
+
+O ::= ε 
+{{ 	symbolTableStack.push(symbolTable);
+	symbolTable=new SymbolTable(symbolTable);  
+	offsetStack.push(offset);
+	offset=0; }} 
+   
+P ::= ε
+{{	nextQuad=1;
+	instruction.add()
+	quadruple.add()}} 
+	
+BaseType ::= bool {{BaseType.type=‘bool’,BaseType.width=1}}
+BaseType ::= char {{BaseType.type=‘char’,BaseType.width=1}}
+BaseType ::= int {{BaseType.type=‘int’,BaseType.width=4}}
+BaseType ::= float {{BaseType.type=‘float’,BaseType.width=4}}
+BaseType ::= double {{BaseType.type=‘double’,BaseType.width=8}}
+
+Type ::= BaseType {{Type.type=BaseType.type; Type.width=BaseType.width;}}
+Type ::= struct ID {{Type.type=‘struct ’+ID.lexeme; Type.width=lookUp(ID.lexeme).width;}}	
+
+DefList ::= DefList Def 
+{{}}
+
+DefList ::= ''
+{{}}
+
+dims ::= ε 
+{{dims.isArray=false}}
+
+dims ::= [ INTNUM ] dims
+{{dims.isArray=true;
+dimlist.add(INTNUM.value);}}
+
+Def ::= Type ID dims ; 
+{{ if(dims.isArray){
+		构造type字符串;
+		width=prod(dims) * Type.width;
+		symbolTable.enter(new ArraySymbol(ID.lexeme,type,width,dimlist));
+		offset=offset+width;
+	}else{
+		symbolTable.enter(new Symbol(ID.lexeme,Type.type,Type.width));
+		offset=offset+Type.width;
+	} }}
+	
+FunDec ::= ID ( VarList )
+{{FunDec.lexeme=ID.lexeme;
+FunDec.list=VarList.list;}}
+
+FunDec ::= ID ( )
+{{FunDec.lexeme=ID.lexeme;
+FunDec.list=new ArrayList();}}
+
+VarList ::= VarList , ParamDec 
+{{VarList.list.add(ParamDec.type)}}
+
+VarList ::= ParamDec
+{{VarList.list.add(ParamDec.type)}}
+
+ParamDec ::= Type ID dims
+{{构造type字符串;
+ParamDec.type=type}}
+
+relop ::= < 
+relop ::= <= 
+relop ::= == 
+relop ::= != 
+relop ::= > 
+relop ::= >=
+{{relop.op=op}}
+
+M ::= ε
+{{	M.quad = nextquad ; }}
+
+N ::= ε
+{{ N.nextlist = makelist(nextquad);                                               
+gen(‘goto _’); }}
+
+StmtList ::= StmtList M Stmt
+{{backpatch(StmtList.nextlist,M.quad);
+StmtList.nextlist=Stmt.nextlist}}
+
+StmtList ::= ''
+{{StmtList.nextlist=new ArrayList();}}
+
+Stmt ::= Exp ;
+
+Stmt ::= ID = Exp ; 
+{{p = lookUp(ID.lexeme); if p == null then error ; gen( p ‘=’ E.addr ); }}
+
+Stmt ::=  L = Exp ; 
+{{ gen( L.array ‘[’ L.offset ‘]’ ‘=’ E.addr ); }}
+
+Stmt ::=  CompSt 
+
+Stmt ::=  return Exp ; 
+{{gen('return'+Exp.addr)}}
+
+L ::= ID [ Exp ] 
+{{L.array = lookUp(ID.lexeme); if L.array==null then error ;
+L.dim = 1 ;
+L.offset = newtemp();
+width=内情向量计算出的宽度+L.dim;
+gen( L.offset ‘=’ E.addr ‘*’ width ); }}
+
+L ::= L [ Exp ]
+{{L.array = L1. array;
+L.dim=L1.dim+1
+t = newtemp();
+width=内情向量计算出的宽度+L.dim;
+gen( t ‘=’ E.addr ‘*’ width ); 
+L.offset = newtemp();
+gen( L.offset ‘=’ L1.offset ‘+’ t ); }}
+
+Exp ::= Exp + Exp 
+Exp ::=  Exp - Exp 
+Exp ::=  Exp * Exp 
+Exp ::=  Exp / Exp 
+{{ E.addr = newtemp( ); gen(E.addr ‘=’ E1.addr ‘+-*/’ E2.addr); }}
+
+Exp ::=  ( Exp ) 
+{{E.addr = E1.addr ;}}
+
+Exp ::=  ID 
+{{ E.addr = lookUp(ID.lexeme);
+if E.addr==null then error ; }}
+			  
+Exp ::= L
+{{ E.addr = newtemp(); gen( E.addr ‘=’ L. array ‘[’ L.offset ‘]’ ); }}
+
+Exp ::=  INTNUM {{ E.addr = INTNUM.value;}}
+
+Exp ::=  REALNUM {{ E.addr = REALNUM.value;}}
+
+
+
+Exp ::=  call ID ( ) 
+{{n=0;
+gen(‘call’ id.addr ‘,’ n);}}
+
+Exp ::=  call ID ( ParamList )
+{	n=0;
+	for q中的每个t  do 
+	{	gen(‘param’ t );
+		n = n+1； 
+	}
+	gen(‘call’ id.addr ‘,’ n);
+}
+
+ParamList ::= Exp , ParamList 
+{{ParamList.list.add(Exp.type)}}
+
+ParamList ::= Exp
+{{ParamList.list.add(Exp.type)}}
+
+CompSt ::= { {{symbolTableStack.push(symbolTable);
+		   symbolTable=new SymbolTable(symbolTable);  
+		   offsetStack.push(offset);
+		   offset=0;}} 
+		   DefList StmtList }
+		   {{
+		   temp=symbolTable;
+		   symbolTable=symbolTableStack.pop();
+		   if(offset!=0){
+				symbolTable.enter(new CompoundSymbol(null,"Compound Statements",offset,temp));
+		   }
+		   offset=offsetStack.pop();}}	
