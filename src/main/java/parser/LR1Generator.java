@@ -344,6 +344,8 @@ public class LR1Generator {
         int AND = Token.TOKEN_STRING_2_NUMBER.get("&&");
         int OR = Token.TOKEN_STRING_2_NUMBER.get("||");
 
+        int DOT = Token.TOKEN_STRING_2_NUMBER.get(".");
+
         int N = NON_TERMINAL_STRING_2_NUMBER.get("N");
         int ELSE = Token.TOKEN_STRING_2_NUMBER.get("else");
 
@@ -381,7 +383,7 @@ public class LR1Generator {
                         }
                     }
                 } else if (Token.TERMINAL_INTEGER.contains(dotSymbol)) {
-                    if (((right.size() == 3 || right.size() == 4) && (dotSymbol == TIMES || dotSymbol == DIV || dotSymbol == AND))
+                    if (((right.size() == 3 || right.size() == 4) && (dotSymbol == TIMES || dotSymbol == DIV || dotSymbol == AND || dotSymbol == DOT))
                             || (right.size() == 10 && dotSymbol == N)) {
                         transition.put(dotSymbol, "s" + gotoTable.get(dotSymbol));
                         reducible = false;
@@ -481,10 +483,10 @@ public class LR1Generator {
     public static void main(String[] args) {
         LR1Generator lr1Generator = new LR1Generator();
         lr1Generator.loadGrammar("src/main/resources/grammar.txt");
-//        System.out.println(productionMap);
-//        for (Item production : productionList) {
-//            System.out.println(production);
-//        }
+        System.out.println(productionMap);
+        for (Item production : productionList) {
+            System.out.println(production);
+        }
 
         lr1Generator.calculateFirstSet();
         System.out.println(firstMap);

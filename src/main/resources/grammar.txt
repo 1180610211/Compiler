@@ -17,11 +17,12 @@ ParamDec ::= Type ID dims
 CompSt ::= { O DefList StmtList }
 StmtList ::= StmtList M Stmt | ε
 
-Stmt ::= Exp ; | ID = Exp ; | L = Exp ; | CompSt | if ( B ) M Stmt | if ( B ) M Stmt N else M Stmt | return Exp ; | while M ( B ) M Stmt | do M Stmt while ( M B ) ; 
-L ::= ID [ Exp ] | L [ Exp ]
-Exp ::= Exp + Exp | Exp - Exp | Exp * Exp | Exp / Exp | ( Exp ) | ID | L | INTNUM | REALNUM | call ID ( ) | call ID ( ParamList )
+Stmt ::= Exp ; | ID = Exp ; | L = Exp ; | CompSt | if ( B ) M Stmt | if ( B ) M Stmt N else M Stmt | return Exp ; | while M ( B ) M Stmt | do M Stmt while ( M B ) ; | Q = Exp ;
+L ::= ID [ Exp ] | L [ Exp ] 
+Q ::= Exp . ID
+Exp ::= Exp + Exp | Exp - Exp | Exp * Exp | Exp / Exp | ( Exp ) | ID | L | INTNUM | REALNUM | call ID ( ) | call ID ( ParamList ) | Q
 ParamList ::= ParamList , Exp | Exp
-B ::= B || M B | B && M B | ! B | ( B ) | Exp relop Exp | true | false
+B ::= B || M B | B && M B | ! B | ( B ) | Exp relop Exp | true | false 
 relop ::= < | <= | == | != | > | >=
 
 M ::= ε

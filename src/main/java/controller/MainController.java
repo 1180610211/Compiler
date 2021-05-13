@@ -17,6 +17,7 @@ import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.LineNumberFactory;
 import parser.Parser;
 import parser.TNode;
+import symbol.SymbolTable;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -122,7 +123,7 @@ public class MainController implements Initializable {
             controller.setErrorInfo(errorList);
         }
 
-        stage.setTitle("Mini Compiler 词法分析 -- Designed By Gao Weize 1180610211");
+        stage.setTitle("Mini Compiler 语法分析 -- Designed By Gao Weize 1180610211");
         stage.getIcons().add(new Image("/img/logo.jpg"));
 
         stage.setResizable(false);
@@ -132,7 +133,42 @@ public class MainController implements Initializable {
 
     @FXML
     private void compile3() throws IOException {
+        List<String> instructionList = parser.getInstructionList();
+        List<String> quadrupleList = parser.getQuadrupleList();
+        List<String> errorList = parser.getErrorList();
+        SymbolTable symbolTable = parser.getSymbolTable();
 
+        Stage stage = new Stage();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/semantic.fxml"));
+        Parent root = loader.load();
+        SemanticController controller = loader.getController();
+        if (errorList.size() == 0) {
+            controller.setInstructions(instructionList);
+            controller.setQuadruples(quadrupleList);
+
+            Stage stage2 = new Stage();
+            FXMLLoader loader2 = new FXMLLoader(getClass().getResource("/fxml/symbolTable.fxml"));
+            Parent root2 = loader2.load();
+            SymbolTableController controller2 = loader2.getController();
+
+            controller2.setSymbolTable(symbolTable);
+
+            stage2.setTitle("Mini Compiler 语义分析 -- Designed By Gao Weize 1180610211");
+            stage2.getIcons().add(new Image("/img/logo.jpg"));
+
+            stage2.setResizable(false);
+            stage2.setScene(new Scene(root2));
+            stage2.show();
+        } else {
+            controller.setErrorInfo(errorList);
+        }
+
+        stage.setTitle("Mini Compiler 语义分析 -- Designed By Gao Weize 1180610211");
+        stage.getIcons().add(new Image("/img/logo.jpg"));
+
+        stage.setResizable(false);
+        stage.setScene(new Scene(root));
+        stage.show();
     }
 
     @FXML

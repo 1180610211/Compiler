@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="750.0" prefWidth="700.0" style="-fx-background-color: #F0FFF0;"
+            xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controller.SymbolTableController">
+    <children>
+        <Label alignment="CENTER" layoutY="32.0" text="符号表" textAlignment="CENTER" AnchorPane.leftAnchor="0.0"
+               AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="32.0">
+            <font>
+                <Font name="KaiTi" size="40.0"/>
+            </font>
+        </Label>
+        <TextArea fx:id="symbolTable" editable="false" layoutY="95.0" prefHeight="655.0" prefWidth="701.0"
+                  style="-fx-font-family: consolas; -fx-font-size: 12pt; -fx-text-fill: blue;" wrapText="true"/>
+
+    </children>
+</AnchorPane>

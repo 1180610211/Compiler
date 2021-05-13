@@ -36,4 +36,14 @@ public class Symbol {
     public void setOffset(int offset) {
         this.offset = offset;
     }
+
+    public String print(int n) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < n; i++) {
+            sb.append("  ");
+        }
+        sb.append("Simple Symbol: " + token.getAttribute() + "," + type + "," + offset);
+        return sb.toString();
+    }
+
 }

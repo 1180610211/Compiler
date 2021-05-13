@@ -49,7 +49,7 @@ public class Lexer {
                 } else if (Character.isLetter(peek) || peek == '_') {
                     //  处理标识符和关键字，以字母或下划线开头
                     idAndKeywordDFA();
-                } else if (Character.isDigit(peek) || peek == '.') {
+                } else if (Character.isDigit(peek)) {
                     //  处理数字常量：整型常量，浮点型常量（含科学计数法），以数字开头
                     numberDFA();
                 } else if (peek == '"') {

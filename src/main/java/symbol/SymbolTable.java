@@ -30,5 +30,7 @@ public class SymbolTable {
         return null;
     }
 
-
+    public Map<String, Symbol> getTable() {
+        return table;
+    }
 }

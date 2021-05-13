@@ -199,3 +199,6 @@ CompSt ::= { {{symbolTableStack.push(symbolTable);
 				symbolTable.enter(new CompoundSymbol(null,"Compound Statements",offset,temp));
 		   }
 		   offset=offsetStack.pop();}}	
+		   
+Exp ::= Exp . ID
+{{E.addr = newtemp( ); gen(E.addr ‘=’ E1.addr ‘.’ ID.lexeme);}}
